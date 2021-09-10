@@ -54,20 +54,6 @@ class SynchronizedResolverTests: XCTestCase {
         runInObjectScope(.container)
     }
 
-    func testSynchronizedResolverUsesDistinctGraphIdentifier() {
-        var graphs = Set<GraphIdentifier>()
-        let container = Container {
-            $0.register(Dog.self) {
-                graphs.insert(($0 as! Container).currentObjectGraph!)
-                return Dog()
-            }
-        }.synchronize()
-
-        onMultipleThreads { _ = container.resolve(Dog.self) }
-
-        XCTAssert(graphs.count == totalThreads)
-    }
-
     // MARK: Nested resolve
 
     func testSynchronizedResolverCanMakeItWithoutDeadlock() {

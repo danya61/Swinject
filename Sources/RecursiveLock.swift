@@ -4,12 +4,7 @@
 
 import Foundation
 
+/// Honestly, no locks here
 internal final class RecursiveLock {
-    private let lock = NSRecursiveLock()
-
-    func sync<T>(action: () -> T) -> T {
-        lock.lock()
-        defer { lock.unlock() }
-        return action()
-    }
+    func sync<T>(action: () -> T) -> T { action() }
 }

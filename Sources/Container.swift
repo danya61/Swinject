@@ -183,26 +183,30 @@ extension Container: _Resolver {
         option: ServiceKeyOption? = nil,
         invoker: @escaping ((Arguments) -> Any) -> Any
     ) -> Service? {
-        var resolvedInstance: Service?
-        let key = ServiceKey(serviceType: Service.self, argumentsType: Arguments.self, name: name, option: option)
+        let execution: () -> Service? = {
+            var resolvedInstance: Service?
+            let key = ServiceKey(serviceType: Service.self, argumentsType: Arguments.self, name: name, option: option)
 
-        if let entry = getEntry(for: key) {
-            resolvedInstance = resolve(entry: entry, invoker: invoker)
+            if let entry = self.getEntry(for: key) {
+                resolvedInstance = self.resolve(entry: entry, invoker: invoker)
+            }
+
+            if resolvedInstance == nil {
+                resolvedInstance = self.resolveAsWrapper(name: name, option: option, invoker: invoker)
+            }
+
+            if resolvedInstance == nil {
+                self.debugHelper.resolutionFailed(
+                    serviceType: Service.self,
+                    key: key,
+                    availableRegistrations: self.getRegistrations()
+                )
+            }
+
+            return resolvedInstance
         }
-
-        if resolvedInstance == nil {
-            resolvedInstance = resolveAsWrapper(name: name, option: option, invoker: invoker)
-        }
-
-        if resolvedInstance == nil {
-            debugHelper.resolutionFailed(
-                serviceType: Service.self,
-                key: key,
-                availableRegistrations: getRegistrations()
-            )
-        }
-
-        return resolvedInstance
+        
+        return dispatchSyncOnMain(executingBlock: execution())
     }
 
     fileprivate func resolveAsWrapper<Wrapper, Arguments>(
@@ -218,9 +222,7 @@ extension Container: _Resolver {
 
         if let entry = getEntry(for: key) {
             let factory = { [weak self] in
-                self?.lock.sync { // provide thread-safety
-                    self?.resolve(entry: entry, invoker: invoker) as Any?
-                }
+                dispatchSyncOnMain(executingBlock: self?.resolve(entry: entry, invoker: invoker) as Any?)
             }
             return wrapper.init(inContainer: self, withInstanceFactory: factory) as? Wrapper
         } else {

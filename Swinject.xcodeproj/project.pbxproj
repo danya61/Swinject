@@ -28,6 +28,10 @@
 		138D38987ED00235C384DD26 /* _Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C304EFDAFB81043B2896E5 /* _Resolver.swift */; };
 		1613AE7671758A85F760C5DF /* EmploymentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077047532310E42432E94D83 /* EmploymentAssembly.swift */; };
 		169235A36E20BDA12AE4AC91 /* ContainerTests.DebugHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4744C3ABBA9A8A585C726883 /* ContainerTests.DebugHelper.swift */; };
+		17CC758326EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */; };
+		17CC758426EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */; };
+		17CC758526EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */; };
+		17CC758626EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */; };
 		1845CF466289264A5BBC0CCE /* ServiceEntry.TypeForwarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FFC812F14E9976208B644F /* ServiceEntry.TypeForwarding.swift */; };
 		1A2759577A52C96E28BB44F0 /* ServiceEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76238B6105E2E443A94CE595 /* ServiceEntry.swift */; };
 		1AF1BB032596F2ADF9021F90 /* Container.TypeForwarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7605BDEF71547D0B17D7195A /* Container.TypeForwarding.swift */; };
@@ -303,6 +307,7 @@
 		1271722CF77709A1173E7863 /* Food.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Food.swift; sourceTree = "<group>"; };
 		15C304EFDAFB81043B2896E5 /* _Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _Resolver.swift; sourceTree = "<group>"; };
 		172E48E07BA72BCBFB305E93 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSyncOnMain.swift; sourceTree = "<group>"; };
 		185C8B2BAF1CF29EB64159FC /* WeakStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakStorageTests.swift; sourceTree = "<group>"; };
 		19726C4D2E8898E5C05A5E38 /* ContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerTests.swift; sourceTree = "<group>"; };
 		1979933FD5852C28F6D8784A /* SynchronizedResolver.Arguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedResolver.Arguments.swift; sourceTree = "<group>"; };
@@ -494,6 +499,7 @@
 				1979933FD5852C28F6D8784A /* SynchronizedResolver.Arguments.swift */,
 				710204D1A678B791BB0FC60E /* SynchronizedResolver.swift */,
 				39924B830576F62A4B528A37 /* UnavailableItems.swift */,
+				17CC758226EB82F80014B76F /* DispatchSyncOnMain.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -829,6 +835,7 @@
 			files = (
 				602201FE3E6CC64F594DEBA1 /* Assembler.swift in Sources */,
 				A5D9F0A6D8FC89662658FBF3 /* Assembly.swift in Sources */,
+				17CC758426EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */,
 				FE07C0CCCD45639FBF85A456 /* Behavior.swift in Sources */,
 				9FF7BABC0BA21A89A755E37C /* Container.Arguments.swift in Sources */,
 				363C4230CAC4547E7A676249 /* Container.Logging.swift in Sources */,
@@ -987,6 +994,7 @@
 			files = (
 				474A4D73269D7BDF0844D704 /* Assembler.swift in Sources */,
 				81AE1BCE31BC99440151A68F /* Assembly.swift in Sources */,
+				17CC758526EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */,
 				2C838FEC75D618B575750A17 /* Behavior.swift in Sources */,
 				1DB36B1F8919879607F67F35 /* Container.Arguments.swift in Sources */,
 				9D78DAAC0307D9422C501D33 /* Container.Logging.swift in Sources */,
@@ -1017,6 +1025,7 @@
 			files = (
 				8F8BF2FFD2D666C4EE71E796 /* Assembler.swift in Sources */,
 				695E6FF61B8CD35434685835 /* Assembly.swift in Sources */,
+				17CC758626EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */,
 				4D667425CB08BF894C1A78AA /* Behavior.swift in Sources */,
 				5BAC0A607F822D6205DA6178 /* Container.Arguments.swift in Sources */,
 				40FCA2AB08F4EA23096075AB /* Container.Logging.swift in Sources */,
@@ -1047,6 +1056,7 @@
 			files = (
 				FED7D8B8C74876D03B5D09DE /* Assembler.swift in Sources */,
 				5010597DD8C25E6684C8087E /* Assembly.swift in Sources */,
+				17CC758326EB82F80014B76F /* DispatchSyncOnMain.swift in Sources */,
 				C60108843AA83DF2B408EE87 /* Behavior.swift in Sources */,
 				AD91C0A080A7CE74369407E7 /* Container.Arguments.swift in Sources */,
 				77E67A2C566A1DFD5407BBA4 /* Container.Logging.swift in Sources */,
