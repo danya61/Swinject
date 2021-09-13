@@ -28,16 +28,19 @@ public final class Container {
     internal var currentObjectGraph: GraphIdentifier?
     internal let lock: RecursiveLock // Used by SynchronizedResolver.
     internal var behaviors = [Behavior]()
-
+    private let allowMultithreadResolving: Bool
+    
     internal init(
         parent: Container? = nil,
         debugHelper: DebugHelper,
-        defaultObjectScope: ObjectScope = .graph
+        defaultObjectScope: ObjectScope = .graph,
+        allowMultithreadResolving: Bool = true
     ) {
         self.parent = parent
         self.debugHelper = debugHelper
-        lock = parent.map { $0.lock } ?? RecursiveLock()
+        lock = parent.map { $0.lock } ?? RecursiveLock(isEnabled: allowMultithreadResolving)
         self.defaultObjectScope = defaultObjectScope
+        self.allowMultithreadResolving = allowMultithreadResolving
     }
 
     /// Instantiates a ``Container``
@@ -54,9 +57,15 @@ public final class Container {
         parent: Container? = nil,
         defaultObjectScope: ObjectScope = .graph,
         behaviors: [Behavior] = [],
-        registeringClosure: (Container) -> Void = { _ in }
+        registeringClosure: (Container) -> Void = { _ in },
+        allowMultithreadResolving: Bool = true
     ) {
-        self.init(parent: parent, debugHelper: LoggingDebugHelper(), defaultObjectScope: defaultObjectScope)
+        self.init(
+            parent: parent,
+            debugHelper: LoggingDebugHelper(),
+            defaultObjectScope: defaultObjectScope,
+            allowMultithreadResolving: allowMultithreadResolving
+        )
         behaviors.forEach(addBehavior)
         registeringClosure(self)
     }
@@ -206,7 +215,11 @@ extension Container: _Resolver {
             return resolvedInstance
         }
         
-        return dispatchSyncOnMain(executingBlock: execution())
+        if allowMultithreadResolving {
+            return execution()
+        } else {
+            return dispatchSyncOnMain(executingBlock: execution())
+        }
     }
 
     fileprivate func resolveAsWrapper<Wrapper, Arguments>(
@@ -221,8 +234,12 @@ extension Container: _Resolver {
         )
 
         if let entry = getEntry(for: key) {
-            let factory = { [weak self] in
-                dispatchSyncOnMain(executingBlock: self?.resolve(entry: entry, invoker: invoker) as Any?)
+            let factory = { [weak self, allowMultithreadResolving] () -> Any? in
+                if allowMultithreadResolving {
+                    return self?.resolve(entry: entry, invoker: invoker) as Any?
+                } else {
+                    return dispatchSyncOnMain(executingBlock: self?.resolve(entry: entry, invoker: invoker) as Any?)
+                }
             }
             return wrapper.init(inContainer: self, withInstanceFactory: factory) as? Wrapper
         } else {
