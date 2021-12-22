@@ -34,11 +34,11 @@ public final class Container {
         parent: Container? = nil,
         debugHelper: DebugHelper,
         defaultObjectScope: ObjectScope = .graph,
-        allowMultithreadResolving: Bool = true
+        allowMultithreadResolving: Bool = false
     ) {
         self.parent = parent
         self.debugHelper = debugHelper
-        lock = parent.map { $0.lock } ?? RecursiveLock(isEnabled: allowMultithreadResolving)
+        lock = parent.map { $0.lock } ?? RecursiveLock()
         self.defaultObjectScope = defaultObjectScope
         self.allowMultithreadResolving = allowMultithreadResolving
     }
@@ -215,11 +215,7 @@ extension Container: _Resolver {
             return resolvedInstance
         }
         
-        if allowMultithreadResolving {
-            return execution()
-        } else {
-            return dispatchSyncOnMain(executingBlock: execution())
-        }
+        return lock.sync(action: execution)
     }
 
     fileprivate func resolveAsWrapper<Wrapper, Arguments>(
@@ -234,11 +230,9 @@ extension Container: _Resolver {
         )
 
         if let entry = getEntry(for: key) {
-            let factory = { [weak self, allowMultithreadResolving] () -> Any? in
-                if allowMultithreadResolving {
-                    return self?.resolve(entry: entry, invoker: invoker) as Any?
-                } else {
-                    return dispatchSyncOnMain(executingBlock: self?.resolve(entry: entry, invoker: invoker) as Any?)
+            let factory = { [weak self] () -> Any? in
+                self?.lock.sync {
+                    self?.resolve(entry: entry, invoker: invoker) as Any?
                 }
             }
             return wrapper.init(inContainer: self, withInstanceFactory: factory) as? Wrapper
