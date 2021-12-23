@@ -28,19 +28,17 @@ public final class Container {
     internal var currentObjectGraph: GraphIdentifier?
     internal let lock: RecursiveLock // Used by SynchronizedResolver.
     internal var behaviors = [Behavior]()
-    private let allowMultithreadResolving: Bool
     
     internal init(
         parent: Container? = nil,
         debugHelper: DebugHelper,
         defaultObjectScope: ObjectScope = .graph,
-        allowMultithreadResolving: Bool = false
+        isGCDSolution: Bool = false
     ) {
         self.parent = parent
         self.debugHelper = debugHelper
-        lock = parent.map { $0.lock } ?? RecursiveLock()
+        lock = parent.map { $0.lock } ?? RecursiveLock(isGCDSolution: isGCDSolution)
         self.defaultObjectScope = defaultObjectScope
-        self.allowMultithreadResolving = allowMultithreadResolving
     }
 
     /// Instantiates a ``Container``
@@ -58,13 +56,13 @@ public final class Container {
         defaultObjectScope: ObjectScope = .graph,
         behaviors: [Behavior] = [],
         registeringClosure: (Container) -> Void = { _ in },
-        allowMultithreadResolving: Bool = true
+        isGCDSolution: Bool = false
     ) {
         self.init(
             parent: parent,
             debugHelper: LoggingDebugHelper(),
             defaultObjectScope: defaultObjectScope,
-            allowMultithreadResolving: allowMultithreadResolving
+            isGCDSolution: isGCDSolution
         )
         behaviors.forEach(addBehavior)
         registeringClosure(self)
